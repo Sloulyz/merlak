@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚽ FÚTBOL CENTRAL - Pronósticos & Análisis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f3460, #16537e, #0f3460);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+            overflow-x: hidden;
+            color: white;
+            line-height: 1.6;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b35, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .main-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #ff6b35, #4ecdc4, #45b7d1);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 3s ease infinite;
+        }
+
+        @keyframes gradientText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 2rem;
+        }
+
+        .section {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4ecdc4;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .match-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .match-card:hover {
+            background: rgba(255,255,255,0.12);
+            transform: scale(1.02);
+        }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .match-teams {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .team-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #ff6b35, #4ecdc4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .vs {
+            color: #ffd93d;
+            font-weight: 900;
+            font-size: 1rem;
+        }
+
+        .match-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .prediction-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .prediction-option {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .prediction-option:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+        }
+
+        .prediction-option.selected {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.2);
+        }
+
+        .prediction-percentage {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #4ecdc4;
+        }
+
+        .prediction-label {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .vote-section {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .vote-button {
+            background: linear-gradient(45deg, #ff6b35, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+        }
+
+        .vote-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .standings-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .standings-table th,
+        .standings-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .standings-table th {
+            background: rgba(255,255,255,0.1);
+            font-weight: 600;
+            color: #4ecdc4;
+        }
+
+        .standings-table tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .position {
+            font-weight: 900;
+            color: #ffd93d;
+            width: 40px;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .news-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .news-card:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-5px);
+        }
+
+        .news-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #4ecdc4;
+        }
+
+        .news-summary {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.5;
+        }
+
+        .news-meta {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 1rem;
+        }
+
+        .live-indicator {
+            background: #ff4757;
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .score {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #ffd93d;
+        }
+
+        .floating-ball {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .floating-ball:hover {
+            transform: scale(1.1) rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .prediction-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .match-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">⚽ FÚTBOL CENTRAL</div>
+            <ul class="nav-links">
+                <li><a href="#partidos">Partidos</a></li>
+                <li><a href="#pronosticos">Pronósticos</a></li>
+                <li><a href="#tabla">Tabla</a></li>
+                <li><a href="#noticias">Noticias</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="hero-section">
+            <h1 class="main-title">EL MUNDO DEL FUTBOL</h1>
+            <p class="subtitle">Pronósticos, análisis y toda la información que necesitas</p>
+        </div>
+
+        <section id="partidos" class="section">
+            <h2 class="section-title">🏆 Partidos de Esta Semana</h2>
+            
+            <div class="match-card">
+                <div class="match-header">
+                    <div class="match-teams">
+                        <div class="team-logo">FCB</div>
+                        <span>FC Barcelona</span>
+                        <span class="vs">VS</span>
+                        <span>Real Madrid</span>
+                        <div class="team-logo">RMA</div>
+                    </div>
+                    <div class="live-indicator">EN VIVO</div>
+                </div>
+                <div class="match-info">
+                    <span>📅 Sábado 22 Jun - 21:00</span>
+                    <span class="score">2 - 1</span>
+                    <span>🏟️ Camp Nou</span>
+                </div>
+                <div class="prediction-section">
+                    <div class="prediction-option" onclick="selectPrediction(this)">
+                        <div class="prediction-percentage">45%</div>
+                        <div class="prediction-label">Barcelona</div>
+                    </div>
+                    <div class="prediction-option" onclick="selectPrediction(this)">
+                        <div class="prediction-percentage">25%</div>
+                        <div class="prediction-label">Empate</div>
+                    </div>
+                    <div class="prediction-option selected" onclick="selectPrediction(this)">
+                        <div class="prediction-percentage">30%</div>
+                        <div class="prediction-label">Real Madrid</div>
+                    </div>
+                </div>
+                <div class="vote-section">
+                    <button class="vote-button" onclick="vote('barcelona')">Voto Barcelona</button>
+                    <button class="vote-button" onclick="vote('madrid')">Voto Madrid</button>
+                </div>
+            </div>
+
+            <div class="match-card">
+                <div class="match-header">
+                    <div class="match-teams">
+                        <div class="team-logo">MUN</div>
+                        <span>Manchester United</span>
+                        <span class="vs">VS</span>
+                        <span>Liverpool FC</span>
+                        <div class="team-logo">LIV</div>
+                    </div>
+                    <span style="color: #4ecdc4;">Próximo</span>
+                </div>
+                <div class="match-info">
+                    <span>📅 Domingo 23 Jun - 16:30</span>
+                    <span style="color: rgba(255,255,255,0.5)">- : -</span>
+                    <span>🏟️ Old Trafford</span>
+                </div>
+                <div class="prediction-section">
+                    <div class="prediction-option" onclick="selectPrediction(this)">
+                        <div class="prediction-percentage">38%</div>
+                        <div class="prediction-label">Manchester</div>
+                    </div>
+                    <div class="prediction-option" onclick="selectPrediction(this)">
+                        <div class="prediction-percentage">22%</div>
+                        <div class="prediction-label">Empate</div>
+                    </div>
+                    <div class="prediction-option" onclick="selectPrediction(this)">
+                        <div class="prediction-percentage">40%</div>
+                        <div class="prediction-label">Liverpool</div>
+                    </div>
+                </div>
+                <div class="vote-section">
+                    <button class="vote-button" onclick="vote('manchester')">Voto Manchester</button>
+                    <button class="vote-button" onclick="vote('liverpool')">Voto Liverpool</button>
+                </div>
+            </div>
+
+            <div class="match-card">
+                <div class="match-header">
+                    <div class="match-teams">
+                        <div class="team-logo">PSG</div>
+                        <span>Paris Saint-Germain</span>
+                        <span class="vs">VS</span>
+                        <span>Bayern Munich</span>
+                        <div class="team-logo">BAY</div>
+                    </div>
+                    <span style="color: #4ecdc4;">Próximo</span>
+                </div>
+                <div class="match-info">
+                    <span>📅 Martes 25 Jun - 20:00</span>
+                    <span style="color: rgba(255,255,255,0.5)">- : -</span>
+                    <span>🏟️ Parc des Princes</span>
+                </div>
+                <div class="prediction-section">
+                    <div class="prediction-option" onclick="selectPrediction(this)">
+                        <div class="prediction-percentage">35%</div>
+                        <div class="prediction-label">PSG</div>
+                    </div>
+                    <div class="prediction-option" onclick="selectPrediction(this)">
+                        <div class="prediction-percentage">20%</div>
+                        <div class="prediction-label">Empate</div>
+                    </div>
+                    <div class="prediction-option" onclick="selectPrediction(this)">
+                        <div class="prediction-percentage">45%</div>
+                        <div class="prediction-label">Bayern</div>
+                    </div>
+                </div>
+                <div class="vote-section">
+                    <button class="vote-button" onclick="vote('psg')">Voto PSG</button>
+                    <button class="vote-button" onclick="vote('bayern')">Voto Bayern</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="tabla" class="section">
+            <h2 class="section-title">📊 Tabla de Posiciones - La Liga</h2>
+            <table class="standings-table">
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Equipo</th>
+                        <th>PJ</th>
+                        <th>G</th>
+                        <th>E</th>
+                        <th>P</th>
+                        <th>Pts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="position">1</td>
+                        <td>🔴 FC Barcelona</td>
+                        <td>35</td>
+                        <td>28</td>
+                        <td>4</td>
+                        <td>3</td>
+                        <td style="color: #4ecdc4; font-weight: 900;">88</td>
+                    </tr>
+                    <tr>
+                        <td class="position">2</td>
+                        <td>🔵 Real Madrid</td>
+                        <td>35</td>
+                        <td>25</td>
+                        <td>6</td>
+                        <td>4</td>
+                        <td style="color: #4ecdc4; font-weight: 900;">81</td>
+                    </tr>
+                    <tr>
+                        <td class="position">3</td>
+                        <td>🔴 Atlético Madrid</td>
+                        <td>35</td>
+                        <td>22</td>
+                        <td>8</td>
+                        <td>5</td>
+                        <td style="color: #4ecdc4; font-weight: 900;">74</td>
+                    </tr>
+                    <tr>
+                        <td class="position">4</td>
+                        <td>🟡 Athletic Bilbao</td>
+                        <td>35</td>
+                        <td>18</td>
+                        <td>10</td>
+                        <td>7</td>
+                        <td style="color: #4ecdc4; font-weight: 900;">64</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="noticias" class="section">
+            <h2 class="section-title">📰 Últimas Noticias</h2>
+            <div class="news-grid">
+                <div class="news-card">
+                    <div class="news-title">El Barça ficha a Joan Garcia</div>
+                    <div class="news-summary">El FC Barcelona ha hecho efectiva la cláusula de rescisión, que ha sido de 25 millones de euros más IPC.</div>
+                    <div class="news-meta">Hace 8 horas • FC Barcelona</div>
+                </div>
+                
+                <div class="news-card">
+                    <div class="news-title">Xabi Alonso: "El partido nos servirá para insistir en lo que tenemos que mejorar"</div>
+                    <div class="news-summary">El técnico del Real Madrid no ocultó su frustración tras su estreno oficial con un empate ante el Al Hilal.</div>
+                    <div class="news-meta">Hace 5 horas • Mundo Deportivo</div>
+                </div>
+                
+                <div class="news-card">
+                    <div class="news-title">Este nuevo Madrid tampoco sabe jugar al 'soccer'</div>
+                    <div class="news-summary">La mano de Xabi Alonso en su estreno apenas se notó y el equipo blanco estuvo muy mal en cuanto a sensaciones.</div>
+                    <div class="news-meta">Hace 5 horas • Mundo Deportivo</div>
+                </div>
+                
+                <div class="news-card">
+                    <div class="news-title">Los antecedentes de México vs. Surinam</div>
+                    <div class="news-summary">La Selección Mexicana podría cerrar su calificación a Cuartos de Final si gana en Arlington, Texas.</div>
+                    <div class="news-meta">Hace 1 minuto • TUDN</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="floating-ball" onclick="scrollToTop()">⚽</div>
+
+    <script>
+        let votes = {
+            barcelona: 1247,
+            madrid: 1892,
+            manchester: 876,
+            liverpool: 1034,
+            psg: 654,
+            bayern: 987
+        };
+
+        function selectPrediction(element) {
+            // Remover selección previa
+            const siblings = element.parentNode.querySelectorAll('.prediction-option');
+            siblings.forEach(sibling => sibling.classList.remove('selected'));
+            
+            // Agregar selección actual
+            element.classList.add('selected');
+            
+            // Efecto visual
+            element.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        function vote(team) {
+            votes[team]++;
+            
+            // Mostrar confirmación
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '¡Votado! ✓';
+            button.style.background = 'linear-gradient(45deg, #2ecc71, #27ae60)';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = 'linear-gradient(45deg, #ff6b35, #4ecdc4)';
+            }, 2000);
+            
+            // Actualizar contador (simulado)
+            console.log(`Votos actuales: ${team} - ${votes[team]}`);
+        }
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Actualizar marcadores en vivo (simulado)
+        function updateLiveScores() {
+            const liveMatch = document.querySelector('.live-indicator').closest('.match-card');
+            const scoreElement = liveMatch.querySelector('.score');
+            
+            // Simular cambios de marcador ocasionales
+            if (Math.random() < 0.1) { // 10% de probabilidad cada 5 segundos
+                const scores = ['2 - 1', '2 - 2', '3 - 1', '3 - 2'];
+                const randomScore = scores[Math.floor(Math.random() * scores.length)];
+                scoreElement.textContent = randomScore;
+                
+                // Efecto visual de gol
+                scoreElement.style.transform = 'scale(1.3)';
+                scoreElement.style.color = '#ffd93d';
+                setTimeout(() => {
+                    scoreElement.style.transform = 'scale(1)';
+                }, 500);
+            }
+        }
+
+        // Actualizar cada 5 segundos
+        setInterval(updateLiveScores, 5000);
+
+        // Efecto de navegación suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Efecto de hover en noticias
+        document.querySelectorAll('.news-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-5px)';
+                }, 100);
+            });
+        });
+
+        // Cambiar fondo cada 15 segundos
+        const backgrounds = [
+            'linear-gradient(135deg, #0f3460, #16537e, #0f3460)',
+            'linear-gradient(135deg, #2d1b69, #11998e, #2d1b69)',
+            'linear-gradient(135deg, #134e5e, #71b280, #134e5e)',
+            'linear-gradient(135deg, #4a00e0, #8e2de2, #4a00e0)'
+        ];
+
+        let currentBg = 0;
+        setInterval(() => {
+            currentBg = (currentBg + 1) % backgrounds.length;
+            document.body.style.background = backgrounds[currentBg];
+            document.body.style.backgroundSize = '400% 400%';
+        }, 15000);
+    </script>
+</body>
+</html>
